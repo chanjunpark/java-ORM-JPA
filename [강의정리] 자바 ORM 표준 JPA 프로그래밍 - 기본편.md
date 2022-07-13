@@ -1,15 +1,15 @@
 
 ## [1] JPA 소개
 ---
-#### ✅ SQL 중심적인 개발의 문제점 
+### ✅ SQL 중심적인 개발의 문제점 
 >  **관계형 데이터베이스의 모델링** 과 **객체지향 모델링** 기법 간의 차이로 인해 객체답게 모델링 할수록 매핑 작업만 늘어나게 되고, 결국 데이터 모델링에 맞춰 프로그램을 설계할 수 밖에 없어진다.
 
 #
-#### ✅ 객체를 Collection에 저장하듯이 DB에 저장할 수 없을까?
+### ✅ 객체를 Collection에 저장하듯이 DB에 저장할 수 없을까?
 > Java ORM 표준인 JPA를 이용하면 가능하다. JPA는 애플리케이션과 DB 사이에서 동작하며 이 둘을 매핑해주는데, 이를 통해 패러다임의 불일치를 해결하고, SQL 중심적인 개발에서 객체 중심 개발로 나아갈 수 있다.
 
 #
-#### ✅ JPA의 성능 최적화 기능
+### ✅ JPA의 성능 최적화 기능
  1. 1차 캐시와 동일성(identity) 보장
 > - 같은 트랜잭션 안에서는 같은 엔티티를 반환 : 약간의 조회성능 향상
 > - DB Isolation Level이 Read Commit 이어도 애플리케이션에서 Repeatable Read 보장 
@@ -27,7 +27,7 @@
 #
 ## [2] JPA 시작하기
 ---
-#### ✅ JPA 설정 중 중요한 부분
+### ✅ JPA 설정 중 중요한 부분
 - JPA 설정은 /META-INF/persistence.xml 에 위치해야 함
 - javax.persitence로 시작하는 건 JPA 표준속성, hibernate로 시작하는건 하이버네이트 전용 속성임
 - **hibernate.dialect 속성** 지정
@@ -36,4 +36,6 @@
     > - MySQLDialect : MySQL SQL 생성
     > - OracleDialect : Oracle SQL 생성
     > - H2Dialect : H2 SQL 생성  
+- java 11 오류 해결 : https://www.inflearn.com/questions/13985
 
+###
