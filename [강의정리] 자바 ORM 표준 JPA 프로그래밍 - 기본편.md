@@ -38,4 +38,24 @@
     > - H2Dialect : H2 SQL 생성  
 - java 11 오류 해결 : https://www.inflearn.com/questions/13985
 
-###
+### ✅ JPA 구동 방식
+- Java의 Persistence 클래스가 META-INF/persistence.xml에 저장된 설정 정보를 조회한다.
+- 설정에 따라 EntityManagerFactory를 생성한다.
+    > EntityManagerFactory는 하나만 생성해서 어플리케이션 전체에 공유함
+- EntityManagerFactory는 EntityManager 들을 생성한다.
+    > EntityManager는 쓰레드 간에 공유가 되지 않으며, JPA의 모든 데이터 변경은 트랜잭션 안에서 실행됨
+
+### ✅ JPA 어노테이션
+- @Entity : JPA가 관리할 객체
+- @Id : 데이터베이스 PK와 매핑 
+
+### ✅ JPQL
+- 객체를 대상으로 검색하는 객체 지향 쿼리
+- 뒤에서 아주 자세히 다룰 예정이기 때문에 이런걸 사용한다는 정도만 알고 갈 것 
+
+#
+## [3] 영속성 관리 - 내부 동작 방식 
+---
+
+ 
+
