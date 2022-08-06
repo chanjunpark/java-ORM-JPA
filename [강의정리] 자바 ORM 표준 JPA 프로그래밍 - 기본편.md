@@ -1,7 +1,7 @@
 
 ## [1] JPA 소개
 ---
-### ✅ SQL 중심적인 개발의 문제점 
+### ✅ SQL 중심적인 개발의 문제점
 >  **관계형 데이터베이스의 모델링** 과 **객체지향 모델링** 기법 간의 차이로 인해 객체답게 모델링 할수록 매핑 작업만 늘어나게 되고, 결국 데이터 모델링에 맞춰 프로그램을 설계할 수 밖에 없어진다.
 
 #
@@ -12,12 +12,12 @@
 ### ✅ JPA의 성능 최적화 기능
  1. 1차 캐시와 동일성(identity) 보장
 > - 같은 트랜잭션 안에서는 같은 엔티티를 반환 : 약간의 조회성능 향상
-> - DB Isolation Level이 Read Commit 이어도 애플리케이션에서 Repeatable Read 보장 
+> - DB Isolation Level이 Read Commit 이어도 애플리케이션에서 Repeatable Read 보장
  2. 트랜잭션을 지원하는 쓰기 지연(transactional write-behind)
 > - 트랜잭션을 커밋할 때까지 INSERT SQL을 모음
 > - JDBC BATCH SQL 기능을 사용해서 한번에 SQL 전송
 > - UPDATE, DELETE로 인한 Row lock 시간 최소화
-> - 트랜잭션 커밋 시 UPDATE, DELETE SQL 실행하고 바로 커밋 
+> - 트랜잭션 커밋 시 UPDATE, DELETE SQL 실행하고 바로 커밋
  3. 지연 로딩(Lazy Loading)
 > - 지연 로딩 : 객체가 실제 사용될 때 로딩
 >> ex. SELECT * FROM MEMBER; SELECT * FROM TEAM;
