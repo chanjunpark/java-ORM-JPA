@@ -25,14 +25,14 @@ public class JpaMain {
              * em.persist(member); */
 
             //JPQL 쿼리
-            List<Member> result = em.createQuery("select m from Member as m", Member.class)
+            /**List<Member> result = em.createQuery("select m from Member as m", Member.class)
                             .setFirstResult(0) // 페이징 시작위치
                             .setMaxResults(10) // offset
                             .getResultList();
 
             for (Member member : result) {
                 System.out.println("member.name = " + member.getName());
-            }
+            }*/
 
             tx.commit();
         } catch (Exception e) {
