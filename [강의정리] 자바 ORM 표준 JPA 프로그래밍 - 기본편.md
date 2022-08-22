@@ -142,7 +142,7 @@ JPA에서 제일 중요하게 봐야하는 2가지
     - 다양한 옵션들
     > - insertable, updatable : 기본은 true, 등록만 하고 이후 변경 금지하고 싶은 경우엔 updatable을 false로 설정
     > - nullable : not null 제약 조건을 사용하고 싶을 때
-    > - unique : unique 제약 조건 사용하고 싶을 때 -> 잘 안 쓰임(제약조건 이름이 임의로 생성되기 때문에) -> Entity Class @Table annotation에 uniqueConstraints 설정해주는게 좋음
+    > - unique : unique 제약 조건 사용하고 싶을 때 -> 잘 안 쓰임(제약조건 이름이 임의로 생성되기 때문에) -> Entity 단위의 @Table annotation에 uniqueConstraints 설정해주는게 좋음
     > - columnDefinition
     > - length : 길이 제약 조건
 - @Enumerated 
@@ -162,4 +162,22 @@ JPA에서 제일 중요하게 봐야하는 2가지
     > - DB에서 관리하지 않고 memory 에서만 사용하고 싶을 때
 
 ### ✅ 기본 키 매핑
+- @GeneratedValue
+    > strategy 옵션으로 아래의 값들을 사용할 수 있음
+    > - IDENTITY : 기본 키 생성을 데이터베이스에 위임 ex) MySQL auto_increment
+    > - SEQUENCE : Sequence Object에서 값을 가져와 PK 설정 ex) Oracle sequence
+    >   - SEQUENCE 사용하는 경우 필드 타입이 숫자형 이어야 하는데, Long을 쓰는걸 추천함. Integer의 경우 10억을 넘어가면 사용하기가 힘든데, Long을 씀으로써 발생하는 성능저하가 운영환경에서 Data type을 변경하는 작업의 어려움에 비하면 trade-off 에서 이점이 있기 때문임.
+    >   - Entity 단위에서 @SequenceGenerator 를 이용해 테이블마다 별도의 sequence 객체를 생성할 수도 있음
+    >   - allocationSize 를 늘려(default = 50), DB I/O time을 줄일 수 있음. 매번 nextval 를 하지 않고 한번 접근할 때 50개를 생성하고 memory에 올려두고 사용하다가 모두 소진되면 다시 DB에 접근해서 50개를 가져오는 방식. 여러 대의 서버에서도 동시성 이슈 없이 사용 가능함.
+    >   - Q... 근데 이거 동시성 문제는 없을 지라도 Key가 중구난방으로 생성되는 문제는 생길 수 있는거 아닌감??
+    > - TABLE : 키 생성 전용 테이블을 만들어서 DB sequence를 흉내내는 전략
+    >   - 장점 : 모든 데이터베이스에 적용 가능함
+    >   - 단점 : 성능(운영에서 사용하기엔 부담스러움)
+- 권장하는 식별자 전략(PK 설정 전략)
+    > - Long + 대체키 + 키 생성전략 사용
+    > - 결론
+    >   1. auto_increment나 sequence 중 사용하거나
+    >   2. 랜덤 값을 조합한 회사 내의 채번 Rule에 따른 값 사용
+    > - 절대 비즈니스 유효값을 Key로 사용하지 말자 ex) 주민등록번호를 회원 테이블의 Key에 쓰지 말자
+
 

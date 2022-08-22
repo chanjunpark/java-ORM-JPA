@@ -39,13 +39,19 @@ public class JpaMain {
             //}
 
             /**
-             * Member 생성 예시
+             * 필드와 컬럼 매핑 - Member Insert 예시
              */
-            Member member = new Member();
-            member.setId(1L);
-            member.setUsername("david");
-            member.setRoleType(RoleType.USER);
+            //Member member = new Member();
+            //member.setId(1L);
+            //member.setUsername("david");
+            //member.setRoleType(RoleType.USER);
+            //em.persist(member);
 
+            /**
+             *  기본 키 매핑 - Member Insert 예시
+             */
+            Member_key member = new Member_key();
+            member.setUsername("James");
             em.persist(member);
 
             tx.commit();
