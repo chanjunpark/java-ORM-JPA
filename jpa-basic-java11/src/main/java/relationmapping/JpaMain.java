@@ -4,6 +4,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityTransaction;
 import javax.persistence.Persistence;
+import java.util.List;
 
 public class JpaMain {
     public static void main(String[] args) {
@@ -25,7 +26,7 @@ public class JpaMain {
             team.setName("Blue Jays");
             em.persist(team);
 
-            System.out.println("====save Team====");
+            System.out.println("[Debug] ====save Team====");
 
 
             Member member = new Member();
@@ -34,14 +35,24 @@ public class JpaMain {
             member.setTeam(team);
             em.persist(member);
 
-            System.out.println("====save Member====");
+            System.out.println("[Debug] ====save Member====");
+
+            em.flush();
+            em.clear();
 
             Member findMember = em.find(Member.class, member.getId());
 
-            Team findTeam = findMember.getTeam();
+            //Team findTeam = findMember.getTeam();
 
-            System.out.println("findTeam = " + findTeam.getName());
+            //System.out.println("[Debug] findTeam = " + findTeam.getName());
 
+            List<Member> members = findMember.getTeam().getMembers();
+
+            for (Member m : members) {
+                System.out.println("[Debug] member = " + m.getName());
+            }
+
+            System.out.println("[Debug] ==== FINISH ====");
             tx.commit();
         } catch (Exception e) {
             System.out.println("Exception() : " + e.getCause());
