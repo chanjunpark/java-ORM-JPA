@@ -17,7 +17,7 @@
             <property name="hibernate.use_sql_comments" value="true"/>
             <!--운영서버에는 반드시 주석처리 하고 배포해야 함-->
             <!--<property name="hibernate.hbm2ddl.auto" value="create"/>-->
-            <property name="hibernate.hbm2ddl.auto" value="create" />
+            <property name="hibernate.hbm2ddl.auto" value="create"/>
         </properties>
     </persistence-unit>
 </persistence>

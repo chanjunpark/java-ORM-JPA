@@ -3,7 +3,7 @@ package hellojpa;
 import javax.persistence.*;
 import java.util.Date;
 
-@Entity
+// @Entity
 // @Table(name = "USER") //DB의 테이블 이름과 객체 명이 다른 경우 @Table 이용해 지정 가능
 // @Table(uniqueConstraints = {}) // UNIQUE 제약조건 생성가능
 public class Member {
