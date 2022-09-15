@@ -243,5 +243,86 @@ JPA에서 제일 중요하게 봐야하는 2가지
     > - 강의 예제에서는 Member.team이 연관관계의 주인이 된다.
     > - 양방향 매핑 시 연관관계의 주인에 값을 입력해야 한다.
 
+### ✅ 양방향 연관관계와 연관관계의 주인2 - 주의점, 정리
+- 순수 객체 상태를 고려해서 항상 두 객체 모두에 값을 설정해야 한다. 
+    - EntityManager에 등록된 정보가 DB에 저장되고, DB조회를 통해 새로 객체를 생성하는 경우 문제가 없다. JPA에서 연관관계 FK를 통해 양방향 탐색이 가능하도록 설정을 맞춰주기 때문에.
+    - 반면, 아직 DB에 저장되지 않은 상태로 EntityManger에 남아있는 캐시에서 객체를 불러와서 양방향 탐색을 시도한다면? 연관관계의 주인인 객체(Member)에서는 소속된 팀을 세팅하고 조회할 수 있지만, 연관관계의 주인이 아닌 객체(Team)에서는 소속 선수를 조회할 수 없다. → 데이터가 꼬여서 이상하게 보이는 상황이 발생함.
+    '''java
+    Team team = new team();
+    Member member = new member();
+    ...
+    // 연관관계 매핑은 Member의 FK 값을 이용해 되어 있지만 값 설정은 두 객체 모두에 해줘야 함
+    member.setTeam(team);
+    team.getMembers().add(member)
+    '''
+- 연관관계 편의 메서드를 생성하는게 좋다.
+    - 위에서 살펴본 바와 같이 순수 객체 상태를 고려하면 연관관계의 주인 설정과는 별개로 항상 두 객체 모두에 값을 설정해줘야 하는데, 이걸 매번 빼먹지 않고 하기가 힘들기 때문!
+    - 💡 How? Entity(Domain) layer에서 메서드를 생성해준다. 
+    - 🚨 연관관계 주인을 설정하는 것과는 별개이니 헷갈리지 않도록 주의한다.
+    '''java
+    @Entity
+    public class Member {
+        
+        @Id @GeneratedValue
+        @Column(name = "MEMBER_ID")
+        private Long id;
+
+        ...
+
+        @ManyToOne
+        @JoinColumn(name = "TEAM_ID")
+        private Team team;
+
+        /**
+        * 한쪽에서만 값을 변경해도 양쪽에 값이 설정됨
+        * 반대쪽(Team)에 addMember(Member member) 메서드 추가해줘도 됨
+        * 양쪽에 다 설정해두면 문제가 될 수도 있으니 상황에 따라 적절한 편의 메서드를 작성하고 반대쪽 객체는 작성하지 않는다 → 잘못하면 무한루프 걸림
+        */
+        public void changeTeam(Team team) {
+             this.team = team; // 메서드를 호출한 객체의 팀을 설정
+             team.getMembers().add(this); // team에서 불러온 멤버 리스트에 메서드를 호출한 객체를 추가
+        }
+    
+    }
+    '''
+    - 기존 리스트에서 null 체크하고, 객체를 삭제하고 새로운 객체를 넣어주는 등의 복잡한 작업까지는 강의에서 안 다루고, 궁금한 경우 책을 보면 도움이 된다. 실무에서는 강의 내용 정도까지만 알아도 큰 무리없음.
+- 양방향 매핑 시 무한루프를 조심하자
+    - 예) toString(), lombok, JSON 생성 라이브러리
+    - IntelliJ Constructor 이용해 toString() 생성하는 경우
+    '''
+    @Entity 
+    public class Member {
+        @Override
+        public String toString() {
+            return "Member{" +
+                    "id=" + id +
+                    ", name='" + name + '\'' +
+                    ", team=" + team + // 여기서 team 넣는다는 건 이 때 team.toString()을 또 호출한다는 의미임
+                    '}';
+        }
+    }
+    '''
+    - 위와 같은 코드를 작성한 뒤 Team에도 똑같이 toString()을 작성하려고 하면 Team에서도 Member의 toString()을 호출하는 메서드가 생성됨
+    - 따라서 양쪽에서 서로 반대편 객체의 toString()을 무한으로 호출하게 됨 → StackOverFlow 발생함
+    - 언제 자주 발생하나? Controller에서 Entity를 바로 반환하는 경우 Json 변환 과정에서 위와 같은 무한루프 생기는 경우가 대다수임
+    - 어떻게 해결하나? 
+        1. Lombok에서 제공하는 toString() 사용을 지양해야함.
+        2. Controller에서 절대 Entity를 그냥 반환하지 말아야 함.
+            - Entity를 Json으로 반환할 때 루프 문제가 생길 수 있다.
+            - Entity는 언제든 변경가능한데, 엔티티를 그대로 반환하면 Entity가 변경될 때마다 API spec이 따라서 바뀌게 된다.
+            - 💡 따라서 Entity는 DTO로 변환해서 반환하는걸 추천함!!!
+- 🚨 양방향 매핑 정리
+    - **단방향 매핑만으로도 이미 연관관계 매핑은 완료된 것이다**
+    > - 즉, 단방향 매핑으로 설계는 완료되어야 함! (처음에는 양방향 매핑 하지말 것)
+    > - 양방향 매핑은 반대 방향으로 조회할 수 있는 기능(객체 그래프 탐색)이 추가되는 것 뿐이다.
+    > - 설계 이후 개발하다 보면 JPQL을 이용해 역방향으로 탐색할 일이 많다.
+    > - 단방향 매핑을 잘 하고 양방향은 필요할 때 추가해도 된다.
+    >    - JAVA 코드만 수정하면 되고 Table 설계는 변경되지 않기 때문.
+
+    - 연관관계의 주인을 정하는 기준
+    > - 비즈니스 로직을 기준으로 연관관계의 주인을 선택하면 안 됨.
+    > - 연관관계의 주인은 외래 키의 위치를 기준으로 정해야 함.
+    >   - 비즈니스 요구사항이 반대의 작업(예. Team에 Member를 추가)을 많이 요구한다면 앞에서 공부한 편의 메서드를 작성하는 방식으로 풀어내면 됨.
+
 
 
