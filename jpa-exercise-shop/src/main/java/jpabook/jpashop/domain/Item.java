@@ -1,9 +1,6 @@
 package jpabook.jpashop.domain;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 @Entity
 public class Item {
@@ -15,6 +12,14 @@ public class Item {
     private String name;
     private int price;
     private int stockQuantity;
+
+    public Item(String name) {
+        this.name = name;
+    }
+
+    public Item() {
+
+    }
 
     public Long getId() {
         return id;

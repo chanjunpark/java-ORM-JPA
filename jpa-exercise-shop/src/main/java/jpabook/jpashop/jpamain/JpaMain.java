@@ -1,5 +1,7 @@
 package jpabook.jpashop.jpamain;
 
+import jpabook.jpashop.domain.Item;
+import jpabook.jpashop.domain.Member;
 import jpabook.jpashop.domain.Order;
 import jpabook.jpashop.domain.OrderItem;
 
@@ -7,6 +9,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
 import javax.persistence.EntityTransaction;
 import javax.persistence.Persistence;
+import java.time.LocalDateTime;
 
 public class JpaMain {
 
@@ -21,10 +24,35 @@ public class JpaMain {
         // code
         try {
 
-            Order order = new Order();
-            order.addOrderItem(new OrderItem());
+            System.out.println("===start===");
 
+            System.out.println("===사용자생성===");
+            Member member = new Member("user_A");
+            em.persist(member);
+            System.out.println("===사용자저장===");
+
+            System.out.println("===상품생성===");
+            Item item = new Item("티셔츠");
+            em.persist(item);
+            System.out.println("===상품저장===");
+
+            System.out.println("===주문생성===");
+            Order order = new Order(member, LocalDateTime.now());
+            em.persist(order);
+            System.out.println("===주문저장===");
+
+            System.out.println("===주문-상품생성===");
+            OrderItem orderItem = new OrderItem(item);
+            em.persist(orderItem);
+            System.out.println("===주문-상품저장===");
+
+            System.out.println("===save orderItem===");
+            order.addOrderItem(orderItem);
+
+
+            System.out.println("===finish===");
             tx.commit();
+
         } catch (Exception e) {
             tx.rollback();
         } finally {

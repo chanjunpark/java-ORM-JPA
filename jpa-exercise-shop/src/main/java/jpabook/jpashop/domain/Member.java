@@ -22,8 +22,17 @@ public class Member {
 
     // 예제니까 추가해보는 연관관계 매핑임
 
-    @OneToMany(mappedBy = "member")
-    private List<Order> orders = new ArrayList<>();
+//    @OneToMany(mappedBy = "member")
+//    private List<Order> orders = new ArrayList<>();
+
+
+    public Member(String name) {
+        this.name = name;
+    }
+
+    public Member() {
+
+    }
 
     public Long getId() {
         return id;

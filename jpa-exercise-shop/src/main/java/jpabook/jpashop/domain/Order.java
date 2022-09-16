@@ -29,9 +29,22 @@ public class Order {
     @Enumerated(EnumType.ORDINAL)
     private OrderStatus status;
 
+    public Order(Member member, LocalDateTime orderDate) {
+        this.member = member;
+        this.orderDate = orderDate;
+    }
+
+    public Order() {
+
+    }
+
     public void addOrderItem(OrderItem orderItem){
         orderItems.add(orderItem);
         orderItem.setOrder(this);
+    }
+
+    public Order(Long id) {
+        this.id = id;
     }
 
     public Long getId() {

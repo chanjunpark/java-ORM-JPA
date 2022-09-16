@@ -26,6 +26,15 @@ public class OrderItem {
     private int orderPrice;
     private int count;
 
+    public OrderItem(Item item) {
+        this.item = item;
+    }
+
+    public OrderItem() {
+
+    }
+
+
     public Long getId() {
         return id;
     }
