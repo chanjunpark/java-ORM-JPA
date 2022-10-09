@@ -1,14 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="351967fe-ccfc-4823-a1bc-28d1a0c5d212" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/jpa-exercise-shop/.idea/.gitignore" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/jpa-exercise-shop/.idea/compiler.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/jpa-exercise-shop/.idea/jarRepositories.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/jpa-exercise-shop/.idea/misc.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/jpa-exercise-shop/.idea/vcs.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/jpa-exercise-shop/pom.xml" afterDir="false" />
-    </list>
+    <list default="true" id="351967fe-ccfc-4823-a1bc-28d1a0c5d212" name="Changes" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -25,12 +18,14 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">
-    <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
-    <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
-    <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
-  </component>
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "RunOnceActivity.OpenProjectViewOnStart": "true",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "WebServerToolWindowFactoryState": "false",
+    "last_opened_file_path": "/Users/kakaobank/Desktop/Study/java-ORM-JPA"
+  }
+}]]></component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">
@@ -40,10 +35,22 @@
       <option name="presentableId" value="Default" />
       <updated>1661393931070</updated>
       <workItem from="1661393933263" duration="12000" />
+      <workItem from="1665310733938" duration="47000" />
     </task>
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
     <option name="version" value="3" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
   </component>
 </project>
