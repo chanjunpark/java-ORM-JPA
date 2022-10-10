@@ -434,4 +434,41 @@ JPA에서 제일 중요하게 봐야하는 2가지
     > 단순하고, 확장 가능성도 적은 경우에 단일테이블 사용. 비즈니스적으로 중요하고 복잡한 경우 조인전략을 사용
 
 ### ✅ Mapped Superclass - 매핑 정보 상속
+- 작성자, 작성시간, 최종수정자, 최중수정시간 등의 속성을 모든 테이블에서 같이 사용하고 싶을 때 쓸 수 있는 어노테이션
+```java
+    
+    @Getter @Setter
+    @MappedSuperclass
+    public abstract class BaseEntity { // 공통 속성을 관리하는 클래스
+        
+        private String createdBy;
+        private LocalDateTime createdDate;
+        private String lastModifiedBy;
+        private LocalDateTime lastModifiedDate;
+
+    }
+
+    @Entity
+    public class Member extends BaseEntity { // 이를사용하는 엔티티
+
+        @Id @GeneratedValue
+        @Column(name = "MEMBER_ID")
+        private Long id;
+
+        ...
+
+    }
+```
+- 상속관계 매핑이 아님
+- 엔티티가 아니기 때문에 테이블과 매핑되지 않음(테이블과 관계 없고 단순히 엔티티가 공통으로 사용하는 매핑 정보를 모으는 역할)
+- 부모 클래스를 상속 받는 자식 클래스에 매핑 정보만 제공
+- 조회, 검색 불가(em.find(BaseEntity.class) 불가함)
+- 직접 생성해서 사용할 일 없으므로 추상 클래스 권장함 (💡실무에서 유용하게 쓰기 좋음)
+- 참고 : @Entity 클래스는 엔티티나 @MappedSuperclass로 지정한 클래스만 상속 가능함
+
+### ✅ 실전 예제 4 - 상속관계 매핑
+
+#
+## [8] 프록시와 연관관계 정리
+---
 
