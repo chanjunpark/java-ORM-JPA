@@ -630,3 +630,35 @@ JPA에서 제일 중요하게 봐야하는 2가지
 - @ManyToOne, @OneToOne은 기본이 즉시로딩 ➡️ LAZY로 설정해줘야 함.
 - @OneToMany, @ManyToMany는 기본이 지연로딩
 
+### ✅ 영속성 전이(CASCADE)와 고아 객체
+- 영속성 전이(CASCADE)
+    ```java
+
+       public class Parent {
+        
+        @Id
+        @GeneratedValue
+        private Long id;
+
+        private String name;
+
+        @OneToMany(mappedBy = "parent", cascade = CascadeType.ALL)
+        private List<Child> childList = new ArrayList<>();
+    
+       }
+        
+    ```
+    - 연관관계 셋팅과 아무 상관 없음
+    - 특정 엔티티를 영속화하는 과정에서 연관된 엔티티도 함께 영속화하고 싶을 때 사용
+    - 소유자가 하나일 때는 상관 없지만, 다른 엔티티와도 연관관계를 맺고 있을 때는 CASCADE를 사용하지 말아야 한다.
+    - 사용조건
+        1. Parent 와 Child의 Life cycle이 동일할 때
+        2. 단일 소유자(Parent만이 Child를 갖고 있을 때)
+- 고아 객체
+    - 참조가 제거된 엔티티는 다른 곳에서 참조하지 않는 고아 객체로 보고 삭제하는 기능
+    - 참조하는 곳이 하나일 때 사용해야 함 (예. 게시판의 첨부파일)
+    - 특정 엔티티만(개인) 소유하고 있을 때 사용해야 함
+- 영속성 전이 + 고아 객체 개념을 모두 사용하는 경우
+    - 스스로 생명주기를 관리하는 엔티티는 em.persist()로 영속화, em.remove()로 제거
+    - 두 옵션 모두 활성화 하면 부모 엔티티를 통해 자식의 생명주기를 관리할 수 있음
+    - 도메인 주도 설계(DDD)의 애그리거트 루트 개념을 구현할 때 유용함.
