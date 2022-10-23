@@ -558,3 +558,75 @@ JPA에서 제일 중요하게 봐야하는 2가지
 - 💡 tip) 프록시(getReference)를 실무에서 직접 사용하는 일은 거의 없다. 다만, 뒤에 이어질 즉시 로딩과 지연 로딩을 깊이 있게 이해하기 위해서는 프록시의 특징을 잘 알고 있어야 한다!!
 
 ### ✅ 즉시 로딩과 지연 로딩
+- 지연로딩(LAZY)을 사용해서 프록시로 조회
+    - 비즈니스 로직에서 Member와 Team을 함께 사용할 일이 적다면 지연로딩 전략이 효율적이다.
+    - Member를 조회하며 Team은 프록시로 가져오고, 실제 Team을 사용하는 시점에 이를 초기화(DB조회)
+    ```java
+
+        public class Member {
+            @Id
+            @GeneratedValue
+            private Long id;
+
+            @Column(name = "USERNAME")
+            private String name;
+
+            @ManyToOne(fetch = FetchType.LAZY)
+            @JounColumn(name = "TEAM_ID")
+            private Team team;
+        }
+
+
+        Member member = em.find(Member.class, 1L);
+        Team team = member.getTeam();
+
+        ...
+
+
+        team.getName(); // 이 지점에서 초기화(DB조회)
+
+    ```
+- 즉시로딩(EAGER)을 사용해서 조회
+    - 반면, 비즈니스 로직에서 Member와 Team을 계속 함께 사용할 때는 즉시로딩 전략이 더 효율적이다.
+    - Member를 가져올 때 Team까지 조인을 해서 함께 가져옴.
+    ```java
+
+        public class Member {
+            @Id
+            @GeneratedValue
+            private Long id;
+
+            @Column(name = "USERNAME")
+            private String name;
+
+            @ManyToOne(fetch = FetchType.EAGER)
+            @JounColumn(name = "TEAM_ID")
+            private Team team;
+        }
+
+
+        Member member = em.find(Member.class, 1L); // 여기서 Member와 Team을 Join해서 한번에 모든 필드를 가져옴
+
+    ```
+(💡정말 중요한 내용) 
+- **실무에서는 즉시로딩을 사용하면 안 됨!!** ➡️ 즉시 로딩은 상상하지 못한 쿼리가 나간다  
+- **모든 연관관계에 지연 로딩을 사용해라!**
+- JPQL fetch 조인이나, 엔티티 크래프 기능을 사용하라(뒤에서 설명)
+- 이유
+    1. 즉시로딩을 사용하면 전혀 예상치 못한 SQL 이 수행됨
+    2. 즉시로딩은 JPQL에서 N+1 문제를 야기함
+    ```java
+
+        List<Member> members = em.createQuery("select m from Member m", Member.class)
+                                .getResultList();
+        // 수행된 SQL을 보면 EAGER로 셋팅 된 상태에서도 select가 두번 실행되는걸 확인할 수 있다. 
+        // SQL : select * from Member
+        // SQL : select * from Team where TEAM_ID = xxx
+
+    ```
+    - em.find()는 PK를 찍어서 조회하기 때문에 JPA가 내부적으로 최적화할 수 있음. 반면, JPQL 같은 경우에는 SQL로 번역되어 DB에 나간 이후 추가적으로 필요한 SQL을 한번 더 수행함.
+    - N+1 문제를 해결하는 방법 : 모든 연관관계를 지연로딩으로 설정한 뒤 세가지 방법 사용 가능(뒤에 JPQL 파트에서 자세히 다룸)
+        1. 패치조인 : 런타임에 동적으로 원하는 애들을 한번에 가져옴 (대표적인 방법)
+- @ManyToOne, @OneToOne은 기본이 즉시로딩 ➡️ LAZY로 설정해줘야 함.
+- @OneToMany, @ManyToMany는 기본이 지연로딩
+
