@@ -1,9 +1,6 @@
 package jpabook.jpashop.jpamain;
 
-import jpabook.jpashop.domain.Item;
-import jpabook.jpashop.domain.Member;
-import jpabook.jpashop.domain.Order;
-import jpabook.jpashop.domain.OrderItem;
+import jpabook.jpashop.domain.*;
 
 import javax.persistence.EntityManager;
 import javax.persistence.EntityManagerFactory;
@@ -26,28 +23,34 @@ public class JpaMain {
 
             System.out.println("===start===");
 
-            System.out.println("===사용자생성===");
-            Member member = new Member("user_A");
-            em.persist(member);
-            System.out.println("===사용자저장===");
+//            System.out.println("===사용자생성===");
+//            Member member = new Member("user_A");
+//            em.persist(member);
+//            System.out.println("===사용자저장===");
+//
+//            System.out.println("===상품생성===");
+//            Item item = new Item("티셔츠");
+//            em.persist(item);
+//            System.out.println("===상품저장===");
+//
+//            System.out.println("===주문생성===");
+//            Order order = new Order(member, LocalDateTime.now());
+//            em.persist(order);
+//            System.out.println("===주문저장===");
+//
+//            System.out.println("===주문-상품생성===");
+//            OrderItem orderItem = new OrderItem(item);
+//            em.persist(orderItem);
+//            System.out.println("===주문-상품저장===");
+//
+//            System.out.println("===save orderItem===");
+//            order.addOrderItem(orderItem);
 
-            System.out.println("===상품생성===");
-            Item item = new Item("티셔츠");
-            em.persist(item);
-            System.out.println("===상품저장===");
+            Book book = new Book();
+            book.setName("JPA");
+            book.setAuthor("김영한");
 
-            System.out.println("===주문생성===");
-            Order order = new Order(member, LocalDateTime.now());
-            em.persist(order);
-            System.out.println("===주문저장===");
-
-            System.out.println("===주문-상품생성===");
-            OrderItem orderItem = new OrderItem(item);
-            em.persist(orderItem);
-            System.out.println("===주문-상품저장===");
-
-            System.out.println("===save orderItem===");
-            order.addOrderItem(orderItem);
+            em.persist(book);
 
 
             System.out.println("===finish===");
