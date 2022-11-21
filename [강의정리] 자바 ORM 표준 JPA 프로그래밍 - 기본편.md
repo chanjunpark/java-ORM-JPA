@@ -768,3 +768,65 @@ JPA에서 제일 중요하게 봐야하는 2가지
 - 엔티티와 값 타입을 혼동해서 엔티티를 값 타입으로 만들면 안 된다
 - 식별자가 필요하고 지속해서 값을 추적/변경해야 한다면 그것은 값 타입이 아닌 엔티티다
 
+#
+## [10] 객체지향 쿼리 언어1 - 기본 문법
+---
+
+### ✅ 소개
+
+- JPA는 다양한 쿼리 방법을 지원
+    - JPQL
+    - QueryDSL
+    - 네이티브 SQL
+    - JDBC API 직접 사용, MyBatis, SpringJdbcTemplate 함께 사용
+- JPQL 소개
+    - 객체 지향 SQL
+    - JPA를 사용하면 엔티티 객체를 중심으로 개발
+        > 이 때의 문제는 검색쿼리. 검색을 할 때도 테이블이 아닌 엔티티 객체를 대상으로 검색해야 하기 때문임
+        > 허나, 모든 DB 데이터를 객체로 변환해서 검색하는 것은 불가능 함
+        > 따라서 어플리케이션이 필요한 데이터만 DB에서 불러오려면 결국 검색 조건이 포함된 SQL이 필요하게 됨
+    - JPA는 SQL을 추상화한 JPQL 이라는 객체 지향 쿼리 언어를 제공
+        > SQL과 문법이 유사하고 엔티티 객체를 대상으로 쿼리를 작성
+        ```java
+            List<Member> result = em.createQuery(
+                "select m from Member m where m.username like '%kim%'",
+                Member.class
+            ).getResultList();
+        ```
+    - SQL을 추상화했기 때문에 특정 데이터베이스 SQL에 의존하지 않음
+- JPQL 단점 
+    - 단순 문자열이기 때문에 동적쿼리 생성이 어려움
+    - JPA는 Criteria 를 제공하지만 실무에서는 잘 쓰이지 않음(복잡하고 실용성이 없음)
+- QueryDSL
+    - 동적쿼리 작성이 편리함
+    - 컴파일 시점에 문법 오류를 찾을 수 있음
+    - 단순하고 쉽기 때문에 실무에 사용하길 권장
+- JDBC 직접 사용
+    - 영속성 컨텍스트를 적절한 시점에 강제로 플러시 해야함
+    예) JPA를 우회해서 SQL을 실행하기 직전에 영속성 컨텍스트 수동 플러시
+
+### ✅ 기본 문법과 쿼리 API
+- select m from Member as m where m.age > 18
+- 엔티티와 속성은 대소문자를 구분한다(Member, age)
+- JPQL 키워드는 대소문자를 구분하지 않는다(select, from, where)
+- 테이블 이름이 아닌 엔티티 이름을 사용한다(Member)
+- alias 는 필수이며 as 는 생략 가능하다(m)
+
+- TypeQuery, Query
+    - TypeQuery : 반환 타입이 명확할 때 사용
+    - Query : 반환 타입이 명확하지 않을 때 사용
+
+- 결과 조회 API
+    - query.getResultList(): 결과가 하나 이상일 때, 리스트 반환. 결과가 없는 경우 빈 리스트 반환
+    - query.getSingleResult(): 결과가 정확히 하나, 단일 객체 반환. 결과가 없는 경우 NoResultException, 둘 이상인 경우 NonUniqueResultException
+
+- 파라미터 바인딩 : 이름기준, 위치기준 으로 적용가능
+    - 이름 기준 바인딩 적용 예시
+    ```java
+        Member result = em.createQuery("select m from Member m where m.username = :username", Member.class)
+        .setParameter("username", "jayden")
+        .getSingleResult();
+    ```
+    - 위치 기준은 웬만해선 쓰지 않는 것을 추천(순서가 바뀌면 오류 가능성이 높아짐)
+
+
