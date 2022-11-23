@@ -15,24 +15,23 @@ public class JpaMain {
         // code
         try {
 
-            Member member = new Member();
-            member.setUsername("member1");
-            member.setAge(10);
-            em.persist(member);
 
-            TypedQuery<Member> query1 = em.createQuery("select m from Member m", Member.class);
-            //Query query2 = em.createQuery("select m.username, m.age from Member m", Member.class);
-
-            // 여러개 가져올 때
-            List<Member> resultList = query1.getResultList();
-
-            for (Member member1 : resultList) {
-                System.out.println("member1 = " + member1);
+            for (int i = 0; i < 100; i++) {
+                Member member = new Member();
+                member.setUsername("member" + i);
+                member.setAge(i);
+                em.persist(member);
             }
 
-            // 하나만 출력할 때
-            // Spring Data JPA 에서는 Optional 이나 null 을 반환하고 예외를 던지지 않음
-            Member singleResult = query1.getSingleResult();
+            List<Member> result = em.createQuery("select m from Member m order by m.age desc", Member.class)
+                    .setFirstResult(1)
+                    .setMaxResults(10)
+                    .getResultList();
+            
+            System.out.println("result.size() = " + result.size());
+            for (Member member1 : result) {
+                System.out.println("member1 = " + member1);
+            }
 
 
             tx.commit();

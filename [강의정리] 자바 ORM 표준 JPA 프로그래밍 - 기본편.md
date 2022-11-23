@@ -829,4 +829,24 @@ JPA에서 제일 중요하게 봐야하는 2가지
     ```
     - 위치 기준은 웬만해선 쓰지 않는 것을 추천(순서가 바뀌면 오류 가능성이 높아짐)
 
+### ✅ 프로젝션
+- 여러 값 조회
+    - new 명령어로 조회 하는 방식 추천
+    ```java
+        em.createQuery("select new jpql.MemberDTO(m.username, m.age) from Member m", MemberDTO.class)
+                    .getResultList();
+    ```
+        - 패키지 명을 포함한 전체 클래스명 입력
+        - 순서와 타입이 일치하는 생성자 필요
+
+### ✅ 페이징
+- JPQL 쿼리에서 setFristResult와 setMaxResults 메서드 체인을 사용해 페이징 처리 가능
+    ```java
+        List<Member> result = em.createQuery("select m from Member m order by m.age desc", Member.class)
+                            .setFirstResult(1)
+                            .setMaxResults(10)
+                            .getResultList();
+    ```
+
+### ✅ 조인
 
