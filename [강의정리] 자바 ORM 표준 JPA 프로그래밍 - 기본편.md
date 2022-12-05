@@ -854,3 +854,45 @@ JPA에서 제일 중요하게 봐야하는 2가지
 - FROM 절의 서브 쿼리는 현재 JPQL에서 작성 불가능
     - 조인으로 풀 수 있으면 풀어서 해결
 
+#
+## [10] 객체지향 쿼리 언어2 - 중급 문법
+---
+
+### ✅ 경로 표현식
+- 경로 표현식이란? .(점)을 찍어 객체 그래프를 탐색하는 것
+    ```java
+        select m.username // 상태 필드
+        from Member m
+        join m.team t // 단일 값 연관 필드
+        join m.orders o // 컬렉션 값 연관 필드
+        where t.name = 'teamA'
+    ```
+- 용어정리
+    - 상태필드(state field) : 단순히 값을 저장하기 위한 필드
+    - 연관필드(association field) : 연관관계를 위한 필드
+        - 단일 값 연관 필드 : @ManyToOne, @OneToOne, 대상이 엔티티(m.team)
+        - 컬렉션 값 연관 필드 : @OneToMany, @ManyToMany, 대상이 컬렉션(m.orders)
+- 경로 표현식의 특징
+    - 상태 필드 : 경로탐색의 끝. 더 이상의 탐색 불가능
+    - 단일 값 연관 경로 : 묵시적 내부 조인(inner join) 발생, 탐색가능
+    - 컬렉션 값 연관 경로 : 묵시적 내부 조인 발생, 탐색 불가능
+- 💡 웬만해선 묵시적 조인이 발생하지 않도록 JPQL을 작성할 것
+    - Then -> FROM 절에서 명시적 조인을 통해 별칭을 얻으면 별칭을 통해 탐색 가능
+- 예제
+    - select o.member.team from Order o : 성공
+    - select t.members from Team t : 성공
+    - select t.members.username from Team t : 실패
+    - select m.username from Team t join t.members m : 성공
+- 💡 실무 조언
+    - 가급적 묵시적 조인 대신 명시적 조인 사용
+    - 조인은 SQL 튜닝에 중요한 포인트이고, 묵시적 조인은 조인이 일어나는 상황을 한눈에 파악하기 어렵기 때문
+
+### ✅ 패치 조인 1 - 기본
+**💡실무에서 정말 중요함**
+- 페치 조인(fetch join)
+    - JPQL 에서 성능 최적화를 위해 제공하는 기능
+    - 연관된 엔티티나 컬렉션을 SQL 한 번에 함께 조회하는 기능
+    - join fetch 명령어 사용
+    - 페치 조인 ::= [LEFT [OUTER] | INNER] JOIN FETCH 조인경로
+    
+

@@ -3,15 +3,20 @@ package jpql;
 import javax.persistence.*;
 
 @Entity
+@IdClass(MemberPK.class)
 public class Member {
 
     @Id @GeneratedValue
     private Long id;
     private String username;
     private int age;
-
+    
+    @Id
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "TEAM_ID")
+    @JoinColumns(value = {
+            @JoinColumn(name = "TEAM_ID"),
+            @JoinColumn(name = "TEAM_NAME")
+    })
     private Team team;
     
     public void changeTeam(Team team) {
